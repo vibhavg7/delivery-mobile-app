@@ -1,0 +1,54 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button (click)="backToRoot()" defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Bill Confirmation</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-content fullscreen>
+  <ion-item style="--background: transparent;" class="close-fake" lines="none" class="ion-text-center">
+    <ion-button (click)="backToRoot()" fill="clear" color="light">
+      <ion-icon name="arrow-back" slot="start"></ion-icon> Back
+    </ion-button>
+  </ion-item>
+  <ion-grid *ngIf="!billimage">
+    <ion-row>
+      <ion-col size-sm="3" offset-sm="3">
+        <app-image-picker (imagePick)="onImagePicked($event)"></app-image-picker>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-slides *ngIf="billimage" [options]="sliderOpts" #slider>
+    <ion-slide>
+      <div class="swiper-zoom-container">
+        <img *ngIf="billimage" src="{{billimage}}" />
+      </div>
+    </ion-slide>
+  </ion-slides>
+  <!-- <img role="button" class="image" [src]="billimage" *ngIf="billimage" /> -->
+  <ion-list>
+    <ion-item>
+        <ion-label position="floating">Bill No.</ion-label>
+        <ion-input type="number" maxlength="200" #billnumber ></ion-input>
+    </ion-item>
+    <ion-item lines="none">
+        <ion-label position="floating">Bill Amount.</ion-label>
+        <ion-input type="number" maxlength="200" #billamount></ion-input>
+      </ion-item>
+  </ion-list>
+</ion-content>
+<!-- *ngIf="billamount != ''" -->
+<ion-footer>
+  <ion-row class="footer_color">
+    <ion-col size="12">
+      <ion-button [disabled]="(!billnumber.value || !billamount.value) || submitted"
+         expand="block" (click)="updateOrderStatus(10,6)" fill="clear" style="color:#fff !important">
+        Confirmed Bill
+        <ion-icon name="arrow-forward"></ion-icon>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+
+</ion-footer>

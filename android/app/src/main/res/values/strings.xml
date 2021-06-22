@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">GrostepDelivery</string>
+    <string name="title_activity_main">GrostepDelivery</string>
+    <string name="package_name">com.grostep.deliveryapp</string>
+    <string name="custom_url_scheme">com.grostep.deliveryapp</string>
+</resources>

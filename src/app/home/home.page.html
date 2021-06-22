@@ -1,0 +1,131 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Grostep
+      <!-- Live Orders Tracking -->
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" pullFactor="0.5" pullMin="100" pullMax="200">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Pull to refresh" refreshingSpinner="circles"
+      refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-md="8" offset-md="2" class="ion-text-center" *ngIf="isLoading">
+        <ion-spinner color="primary"></ion-spinner>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="!isLoading">
+      <ion-col class="ion-text-center" size="6" style="height: 160px !important;outline:none">
+        <ion-list style="background-color: #f5f5f5;height:140px;border-radius: 8px 8px;" lines="none">
+          <ion-item style="padding-top: 5px;">
+            <div style="height:70px;min-height:70px;margin:auto">
+              <!-- <img style="height:70px;min-height:70px;" *ngIf="item?.image_url" [src]="item?.image_url"> -->
+              <span style="height:70px;min-height:70px;font-size: 50px;">
+                {{totalDailyOrders}}
+              </span>
+            </div>
+          </ion-item>
+          <ion-item style="padding-top: 5px;">
+            <div style="margin: 0 auto;display:block;height:70px;min-height:70px;">
+              <ion-text style="font-size:14px;display:inline-block;text-align:center;height:80px;min-height:80px;">
+                Total Order Count
+              </ion-text>
+            </div>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col class="ion-text-center" size="6" style="height: 160px !important;outline:none">
+        <ion-list style="background-color: #f5f5f5;height:140px;border-radius: 8px 8px;" lines="none">
+          <ion-item style="padding-top: 5px;">
+            <div style="height:70px;min-height:70px;margin:auto">
+              <span style="height:70px;min-height:70px;font-size: 50px;">
+                  &#8377;{{totalDailyEarning}}
+              </span>
+              <!-- <img style="height:70px;min-height:70px;" *ngIf="item?.image_url" [src]="item?.image_url"> -->
+            </div>
+          </ion-item>
+          <ion-item style="padding-top: 5px;">
+            <div style="margin: 0 auto;display:block;height:70px;min-height:70px;">
+              <ion-text style="font-size:14px;display:inline-block;text-align:center;height:80px;min-height:80px;">
+                Total Daily Earning
+              </ion-text>
+            </div>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+    <!-- <ion-row>
+      <ion-col size="12" size-sm="8" offset-sm="2">
+        <form [formGroup]="searchCriteriaForm">
+          <ion-item>
+            <ion-label position="floating">Search in Orders</ion-label>
+            <ion-input type="text" (keyup)="onChanges()" autocomplete="off" formControlName="searchCriteria"></ion-input>
+            <ion-icon style="padding-top: 8px;" name="search" slot="end"></ion-icon>
+          </ion-item>
+        </form>
+      </ion-col>
+    </ion-row> -->
+    <ion-row *ngIf="!isLoading" style="cursor:pointer" (click)="newOrder()">
+      <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
+        <ion-list lines="none">
+          <ion-item>
+            <ion-label>
+              <h2>
+                <span>New Order</span>
+                <ion-icon style="float:right" name="arrow-dropright"></ion-icon>
+                <ion-badge style="float:right;background-color:#6fa833;color:#fff">
+                  {{newordercount}}
+                </ion-badge>
+              </h2>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="!isLoading" style="cursor:pointer" (click)="pendingOrder()">
+      <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
+        <ion-list lines="none">
+          <ion-item>
+            <ion-label>
+              <h2>
+                <span>Running Order</span>
+                <ion-icon style="float:right" name="arrow-dropright"></ion-icon>
+                <ion-badge style="float:right;background-color:#6fa833;color:#fff">
+                  {{runningordercount}}
+                </ion-badge>
+              </h2>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="!isLoading" style="cursor:pointer" (click)="delieveredOrder()">
+      <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
+        <ion-list lines="none">
+          <ion-item>
+            <ion-label>
+              <h2>
+                <span>Delivered Order</span>
+                <ion-icon style="float:right" name="arrow-dropright"></ion-icon>
+                <ion-badge style="float:right;background-color:#6fa833;color:#fff">
+                  {{deliveredordercount}}
+                </ion-badge>
+              </h2>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

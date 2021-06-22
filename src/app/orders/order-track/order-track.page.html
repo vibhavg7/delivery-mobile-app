@@ -1,0 +1,130 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button (click)="backToHome()" defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Order Tracking</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col size-md="8" offset-md="2" text-center *ngIf="isLoading">
+        <ion-spinner color="primary"></ion-spinner>
+      </ion-col>
+      <ion-col size="12" size-sm="8" offset-sm="2">
+        <form [formGroup]="searchCriteriaForm">
+          <ion-item>
+            <ion-label position="floating">Search in orders</ion-label>
+            <ion-input type="text" (keyup)="onChanges()" autocomplete="off" formControlName="searchCriteria"></ion-input>
+            <ion-icon style="padding-top: 8px;" name="search" slot="end"></ion-icon>
+          </ion-item>
+        </form>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12" size-sm="8" offset-sm="2" style="font-weight:550">
+        <ion-text>Total orders count : {{orderscount}}</ion-text>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
+        <ion-list>
+          <ion-item *ngFor="let order of orders">
+            <ion-label>
+              <div (click)="pickItems(order?.order_id)">
+                <p class="orderdetailclass">
+                  <span>Order Id : {{order?.order_id}}</span>
+                  <span style="float: right;font-weight: bold;font-size: 15px;">
+                      Payable Amount: &#8377; {{order?.payable_amount}}
+                  </span>
+                </p>
+                <p class="orderdetailclass">Store Name : {{order?.store_name}}</p>
+                <p class="orderdetailclass">Delivery Date : {{order?.delivery_date | date:'short'}}</p>
+                <p class="orderdetailclass">Slot : {{order?.delivery_slot}} {{order?.deliver_now ? 'Deliver Now': 'Deliver Later'}}</p>
+                <p class="orderdetailclass">Total Items : {{order?.total_item_count}}</p>
+              </div>
+              <ion-row *ngIf="orderType === 1">
+                <ion-col size="12">
+                  <ion-button (click)="updateOrderStatus(order?.order_id,3,2)" type="submit" expand="block">
+                    ACCEPT
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+              <ion-row *ngIf="orderType === 2 && order?.order_current_status < 4">
+                <ion-col size="7">
+                  <ion-button expand="block" (click)="openMap(order?.store_latitude,order?.store_longitude)">
+                    Navigate Store
+                    <ion-icon name="navigate"></ion-icon>
+                  </ion-button>
+                </ion-col>
+                <ion-col size="5">
+                  <ion-button (click)="updateOrderStatus(order?.order_id,4,3)" type="submit" expand="block">
+                    Reached
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+              <ion-row *ngIf="orderType === 2 && order?.order_current_status == 4">
+                <ion-col size="12">
+                  <ion-button (click)="pickItems(order?.order_id)" expand="block" type="submit">
+                  <!-- style="background-color:#6fa833 !important;color:#fff !important" -->
+                    Pick Items
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+              <ion-row *ngIf="orderType === 2 && order?.order_current_status == 5">
+                <ion-col size="12">
+                  <ion-button (click)="pendingBilling(order?.order_id)" expand="block" type="submit">
+                    Pending Bill Upload
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+              <ion-row *ngIf="orderType === 2 && order?.order_current_status == 6">
+                <ion-col size="12">
+                  <ion-button expand="block" type="submit">
+                    Pending cust. Bill Confirmation
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+              <ion-row *ngIf="orderType === 2 && order?.order_current_status == 7">
+                <ion-col size="12">
+                  <ion-button expand="block" type="submit">
+                    Pending merchant Confirmation
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+              <ion-row *ngIf="orderType === 2 && order?.order_current_status == 9">
+                <ion-col size="12">
+                  <ion-button (click)="updateOrderStatus(order?.order_id,10,6)" expand="block" 
+                  type="submit">
+                    Mark On the Way
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+              <ion-row *ngIf="orderType === 2 && order?.order_current_status == 10">
+                <ion-col size="7">
+                  <ion-button expand="block" (click)="openMap(order?.customer_latitude,order?.customer_longitude)" 
+                  type="submit">
+                    Navigate Customer
+                    <ion-icon name="navigate"></ion-icon>
+                  </ion-button>
+                </ion-col>
+                <ion-col size="5">
+                  <ion-button (click)="updateOrderStatus(order?.order_id,11,7)" type="submit"  expand="block">
+                    Delivered
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-infinite-scroll *ngIf="totalPages > 1" threshold="25%" (ionInfinite)="loadMore($event)">
+      <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more orders...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+</ion-content>
